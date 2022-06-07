@@ -16,7 +16,7 @@ class Extras(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @nextcord.slash_command(name="botinfo", description="Shows the bot information", guild_ids=[801744339343507457])
+    @nextcord.slash_command(name="botinfo", description="Shows the bot information")
     async def _botinfo(
         self,
         ctx: Interaction,

@@ -232,7 +232,7 @@ class VerifyMessage(commands.Cog):
             self.DBNAME = configData["DBNAME"]
             self.DBENDPOINT = configData["DBENDPOINT"]
 
-    @nextcord.slash_command(name="verifymessage", description="Send the verification message to a channel", guild_ids=[801744339343507457])
+    @nextcord.slash_command(name="verifymessage", description="Send the verification message to a channel")
     async def verifymessage(self,
         ctx: Interaction,
         channel: GuildChannel = SlashOption(

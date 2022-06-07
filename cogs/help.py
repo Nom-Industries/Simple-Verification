@@ -17,7 +17,7 @@ class Help(commands.Cog):
     def __init__(self, client):
         self.client = client
     
-    @nextcord.slash_command(name="help", description="Help command", guild_ids=[801744339343507457])
+    @nextcord.slash_command(name="help", description="Help command")
     async def help(self,
         ctx: Interaction):
         await ctx.response.defer()

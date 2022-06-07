@@ -26,7 +26,7 @@ class Settings(commands.Cog):
 
 
 
-    @nextcord.slash_command(name="config", description="Edit your guild settings config", guild_ids=[801744339343507457])
+    @nextcord.slash_command(name="config", description="Edit your guild settings config")
     async def config(self,
         ctx: Interaction
         ):
