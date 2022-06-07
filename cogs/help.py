@@ -8,7 +8,7 @@ class HelpButtons(nextcord.ui.View):
     def __init__(self):
         super().__init__()
         self.add_item(nextcord.ui.Button(label="Support Server", url="https://discord.gg/aGzvXvTkP8"))
-        self.add_item(nextcord.ui.Button(label="Invite", url=" https://discord.com/api/oauth2/authorize?client_id=981835181243658260&permissions=8&scope=bot%20applications.commands"))
+        self.add_item(nextcord.ui.Button(label="Invite", url="https://discord.com/api/oauth2/authorize?client_id=981835181243658260&permissions=8&scope=bot%20applications.commands"))
         self.add_item(nextcord.ui.Button(label="Vote", url="https://top.gg/bot/828584622156939274/vote"))
 
 
@@ -34,7 +34,7 @@ Usage: ``/verifymessage <#channel> [Custom (True/False)]``""")
         embed.add_field(name=f"/botinfo", value=f"""Explanation: Shows general bot info
 Requires: None
 Usage: ``/botinfo``""")
-        embed.add_field(name="\u200B", value=f"[Support Server](https://discord.gg/aGzvXvTkP8) | [Invite Me]( https://discord.com/api/oauth2/authorize?client_id=981835181243658260&permissions=8&scope=bot%20applications.commands) | [Vote](https://top.gg/bot/828584622156939274/vote)", inline=False)
+        embed.add_field(name="\u200B", value=f"[Support Server](https://discord.gg/aGzvXvTkP8) | [Invite Me](https://discord.com/api/oauth2/authorize?client_id=981835181243658260&permissions=8&scope=bot%20applications.commands) | [Vote](https://top.gg/bot/828584622156939274/vote)", inline=False)
 
 
         await ctx.send(embed=embed, view=HelpButtons())
