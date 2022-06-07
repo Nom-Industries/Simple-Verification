@@ -1,4 +1,4 @@
 # Simple-Verification
 Simple verification discord bot
 
-proper `README` soon
+proper `README` soon (cuz light is bad)
