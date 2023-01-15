@@ -35,3 +35,6 @@ Vote: [Vote for me](https://top.gg/bot/828584622156939274/vote)""", colour=0xadd
 
 def setup(client):
     client.add_cog(Extras(client))
+    
+    
+    #e
