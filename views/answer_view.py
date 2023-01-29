@@ -2,9 +2,13 @@ import nextcord
 
 
 
+
+
 class AnswerButton(nextcord.ui.View):
     def __init__(self):
         super().__init__(timeout=60)
+        self.add_item(nextcord.ui.Button(label="Invite me to your server", url="https://nomindustries.com/SV/invite"))
+        self.add_item(nextcord.ui.Button(label="Privacy Policy", url="https://nomindustries.com/SV/privacy"))
         self.answer = "Too Long ---------------"
 
     @nextcord.ui.button(label = "Answer", style = nextcord.ButtonStyle.green, disabled=False)

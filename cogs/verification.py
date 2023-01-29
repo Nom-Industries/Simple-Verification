@@ -13,16 +13,18 @@ import datetime
 verifying = []
 letters = ["a ", "b ", "c ", "d ", "e ", "g ", "k ", "m ", "n ", "o ", "p ", "q ", "s ", "u ", "v ", "w ", "x ", "y ", "z "]
 
-
-
-
-
+class BotVerifyLinks(nextcord.ui.View):
+    def __init__(self):
+        super().__init__()
+        self.add_item(nextcord.ui.Button(label="Invite me to your server", url="https://nomindustries.com/SV/invite"))
+        self.add_item(nextcord.ui.Button(label="Privacy Policy", url="https://nomindustries.com/SV/privacy"))
 
 
 class VerifyButton(nextcord.ui.View):
     def __init__(self, client):
         self.client = client
         super().__init__(timeout=None)
+        self.add_item(nextcord.ui.Button(label="Privacy Policy", url="https://nomindustries.com/SV/privacy"))
         with open('dbconfig.json','r') as jsonfile:
             configData = json.load(jsonfile)
             self.DBUSER = configData["DBUSER"]
@@ -91,7 +93,7 @@ class VerifyButton(nextcord.ui.View):
                                             pass
                                     return
 
-                                await ctx.send(f"You have successfully verified", ephemeral=True)
+                                await ctx.send(f"You have successfully verified", ephemeral=True, view=BotVerifyLinks())
                                 
                                 if not logchannel == None:
                                     try:
@@ -101,7 +103,7 @@ class VerifyButton(nextcord.ui.View):
                                         
 
                             else:
-                                await ctx.send("You are already verified", ephemeral=True)
+                                await ctx.send("You are already verified", ephemeral=True, view=BotVerifyLinks())
                     
                         except Exception as e:
                             print(e)
@@ -176,7 +178,7 @@ If you get it wrong just click the verify button again and retry"""), colour=0xa
                                                 except:
                                                     pass
                                             return
-                                        await ctx.send(f"You have successfully verified", ephemeral=True)
+                                        await ctx.send(f"You have successfully verified", ephemeral=True, view=BotVerifyLinks())
                                         
                                         if not logchannel == None:
                                             try:
@@ -194,7 +196,7 @@ If you get it wrong just click the verify button again and retry"""), colour=0xa
                                     except:
                                         pass
                             else:
-                                await ctx.send("You are already verified", ephemeral=True)
+                                await ctx.send("You are already verified", ephemeral=True, view=BotVerifyLinks())
                         except Exception as e:
                             print(e)
                             await ctx.send("Server config not setup properly, contact the server admins to fix this.", ephemeral=True)
