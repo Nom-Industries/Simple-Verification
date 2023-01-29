@@ -137,6 +137,10 @@ If you get it wrong just click the verify button again and retry"""), colour=0xa
                                 try:
                                     answerview = AnswerButton()
                                     msg = await ctx.send(embed=embed, file=nextcord.File(f"{ctx.user.id}-captcha.jpg"), view=answerview, ephemeral=True)
+                                    try:
+                                        os.remove(f"{ctx.user.id}-captcha.jpg")
+                                    except:
+                                        pass
                                     await answerview.wait()
                                     result_str = result_str.replace(" ", "")
                                     answer = answerview.answer
