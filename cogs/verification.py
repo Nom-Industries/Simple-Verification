@@ -158,7 +158,7 @@ If you get it wrong just click the verify button again and retry"""), colour=0xa
                                         logembed=nextcord.Embed(title=f"Verification Failed", description=f"{ctx.user.mention} failed verification with the captcha attached. The answer to the captcha is {result_str}", colour=0xff0000)
                                         logembed.set_author(name=f"{ctx.user}", icon_url=ctx.user.avatar.url if ctx.user.avatar else None)
                                         try:
-                                            await logchannel.send(embed=logembed, file=nextcord.File(f"{ctx.user.id}-captcha.jpg"))
+                                            await logmsg.reply(embed=logembed)
                                         except:
                                             pass
                                         return
