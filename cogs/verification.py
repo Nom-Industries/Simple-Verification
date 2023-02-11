@@ -135,6 +135,12 @@ class VerifyButton(nextcord.ui.View):
 The captcha will only be **undercase** **letters**.
 If you get it wrong just click the verify button again and retry"""), colour=0xadd8e6)
                                 try:
+                                    logembed=nextcord.Embed(title=f"Verification Started", description=f"{ctx.user.mention} started verification with the captcha attached. The answer to the captcha is `{str(result_str).replace(' ', '')}`", colour=0xadd8e6)
+                                    logembed.set_author(name=f"{ctx.user}", icon_url=ctx.user.avatar.url if ctx.user.avatar else None)
+                                    try:
+                                        logmsg = await logchannel.send(embed=logembed, file=nextcord.File(f"{ctx.user.id}-captcha.jpg"))
+                                    except:
+                                        pass
                                     answerview = AnswerButton()
                                     msg = await ctx.send(embed=embed, file=nextcord.File(f"{ctx.user.id}-captcha.jpg"), view=answerview, ephemeral=True)
                                     try:
@@ -149,9 +155,15 @@ If you get it wrong just click the verify button again and retry"""), colour=0xa
                                         await ctx.send("You ran out of time to answer the captcha, please try again.", ephemeral=True)
                                         index = verifying.index(ctx.user.id)
                                         del verifying[index]
+                                        logembed=nextcord.Embed(title=f"Verification Failed", description=f"{ctx.user.mention} failed verification with the captcha attached. The answer to the captcha is {result_str}", colour=0xff0000)
+                                        logembed.set_author(name=f"{ctx.user}", icon_url=ctx.user.avatar.url if ctx.user.avatar else None)
+                                        try:
+                                            await logchannel.send(embed=logembed, file=nextcord.File(f"{ctx.user.id}-captcha.jpg"))
+                                        except:
+                                            pass
                                         return
                                     if answer == result_str:
-                                        embed =nextcord.Embed(title="Verification", description=f"{ctx.user.mention} has successfully verified", colour=0xadd8e6)
+                                        embed =nextcord.Embed(title="Verification", description=f"{ctx.user.mention} has successfully verified", colour=0x00ff00)
                                         try:
                                             await ctx.user.add_roles(veryrole)
                                             embed.add_field(name="Roles added", value=f"{veryrole.mention}")
@@ -166,7 +178,7 @@ If you get it wrong just click the verify button again and retry"""), colour=0xa
                                                     del verifying[index]
                                                     if not logchannel == None:
                                                         try:
-                                                            await logchannel.send(embed=embed)
+                                                            await logmsg.reply(embed=embed)
                                                         except:
                                                             pass
                                                     return
@@ -178,7 +190,7 @@ If you get it wrong just click the verify button again and retry"""), colour=0xa
                                             del verifying[index]
                                             if not logchannel == None:
                                                 try:
-                                                    await logchannel.send(embed=embed)
+                                                    await logmsg.reply(embed=embed)
                                                 except:
                                                     pass
                                             return
@@ -186,11 +198,17 @@ If you get it wrong just click the verify button again and retry"""), colour=0xa
                                         
                                         if not logchannel == None:
                                             try:
-                                                await logchannel.send(embed=embed)
+                                                await logmsg.reply(embed=embed)
                                             except:
                                                 pass
                                     else:
                                         await ctx.send(f"Incorrect answer, please try again. Correct answer was `{result_str}`", ephemeral=True)
+                                        logembed=nextcord.Embed(title=f"Verification Failed", description=f"{ctx.user.mention} failed verification with the captcha attached. The answer to the captcha is `{result_str}`", colour=0xff0000)
+                                        logembed.set_author(name=f"{ctx.user}", icon_url=ctx.user.avatar.url if ctx.user.avatar else None)
+                                        try:
+                                            await logmsg.reply(embed=logembed)
+                                        except:
+                                            pass
 
                                 except Exception as e:
                                     print(e)
