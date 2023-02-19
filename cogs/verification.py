@@ -155,7 +155,7 @@ If you get it wrong just click the verify button again and retry"""), colour=0xa
                                         await ctx.send("You ran out of time to answer the captcha, please try again.", ephemeral=True)
                                         index = verifying.index(ctx.user.id)
                                         del verifying[index]
-                                        logembed=nextcord.Embed(title=f"Verification Failed", description=f"{ctx.user.mention} failed verification with the captcha attached. The answer to the captcha is {result_str}", colour=0xff0000)
+                                        logembed=nextcord.Embed(title=f"Verification Failed", description=f"{ctx.user.mention} failed verification with the captcha attached. The answer to the captcha is {result_str} but they didn't answer in time.", colour=0xff0000)
                                         logembed.set_author(name=f"{ctx.user}", icon_url=ctx.user.avatar.url if ctx.user.avatar else None)
                                         try:
                                             await logmsg.reply(embed=logembed)
@@ -203,7 +203,7 @@ If you get it wrong just click the verify button again and retry"""), colour=0xa
                                                 pass
                                     else:
                                         await ctx.send(f"Incorrect answer, please try again. Correct answer was `{result_str}`", ephemeral=True)
-                                        logembed=nextcord.Embed(title=f"Verification Failed", description=f"{ctx.user.mention} failed verification with the captcha attached. The answer to the captcha is `{result_str}`", colour=0xff0000)
+                                        logembed=nextcord.Embed(title=f"Verification Failed", description=f"{ctx.user.mention} failed verification with the captcha attached. The answer to the captcha is `{result_str}` but their answer was `{answer}`", colour=0xff0000)
                                         logembed.set_author(name=f"{ctx.user}", icon_url=ctx.user.avatar.url if ctx.user.avatar else None)
                                         try:
                                             await logmsg.reply(embed=logembed)
