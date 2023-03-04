@@ -7,6 +7,7 @@ from captcha.audio import AudioCaptcha
 from captcha.image import ImageCaptcha
 from views.answer_view import AnswerModal,AnswerButton
 import time
+import io
 import math
 import datetime
 
@@ -129,7 +130,9 @@ class VerifyButton(nextcord.ui.View):
                                 result_str = ''.join(random.choice(letters) for i in range(rangee))
                                 image = ImageCaptcha(width = 280, height = 90, fonts=["nom.ttf", "GolosText-Regular.ttf", "NotoSerif-Regular.ttf", "Poppins-Regular.ttf", "Roboto-Regular.ttf", "SourceSansPro-Regular.ttf"], font_sizes=[60])
                                 data = image.generate(result_str.lower())
-                                image.write(result_str, f'{ctx.user.id}-captcha.jpg')
+                                bytes = io.BytesIO()
+                                image.write(result_str, bytes)
+                                bytes.seek(0)
                                 embed=nextcord.Embed(title=(f"Captcha"), description=(f"""You have 1 minute to answer the captcha correctly. 
                                                                                 
 The captcha will only be **undercase** **letters**.
@@ -142,11 +145,7 @@ If you get it wrong just click the verify button again and retry"""), colour=0xa
                                     except:
                                         pass
                                     answerview = AnswerButton()
-                                    msg = await ctx.send(embed=embed, file=nextcord.File(f"{ctx.user.id}-captcha.jpg"), view=answerview, ephemeral=True)
-                                    try:
-                                        os.remove(f"{ctx.user.id}-captcha.jpg")
-                                    except:
-                                        pass
+                                    msg = await ctx.send(embed=embed, file=nextcord.File(bytes, f"{ctx.user.id}-captcha.jpg"), view=answerview, ephemeral=True)
                                     await answerview.wait()
                                     result_str = result_str.replace(" ", "")
                                     answer = answerview.answer
