@@ -138,14 +138,17 @@ class VerifyButton(nextcord.ui.View):
 The captcha will only be **undercase** **letters**.
 If you get it wrong just click the verify button again and retry"""), colour=0xadd8e6)
                                 try:
+                                    answerview = AnswerButton()
+                                    msg = await ctx.send(embed=embed, file=nextcord.File(bytes, f"{ctx.user.id}-captcha.jpg"), ephemeral=True)
                                     logembed=nextcord.Embed(title=f"Verification Started", description=f"{ctx.user.mention} started verification with the captcha attached. The answer to the captcha is `{str(result_str).replace(' ', '')}`", colour=0xadd8e6)
                                     logembed.set_author(name=f"{ctx.user}", icon_url=ctx.user.avatar.url if ctx.user.avatar else None)
+                                    logembed.set_image(url=msg.attachments[0].url)
                                     try:
-                                        logmsg = await logchannel.send(embed=logembed, file=nextcord.File(f"{ctx.user.id}-captcha.jpg"))
-                                    except:
+                                        logmsg = await logchannel.send(embed=logembed)
+                                    except Exception as e:
+                                        print(e)
                                         pass
-                                    answerview = AnswerButton()
-                                    msg = await ctx.send(embed=embed, file=nextcord.File(bytes, f"{ctx.user.id}-captcha.jpg"), view=answerview, ephemeral=True)
+                                    await msg.edit(view=answerview)
                                     await answerview.wait()
                                     result_str = result_str.replace(" ", "")
                                     answer = answerview.answer

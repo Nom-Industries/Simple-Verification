@@ -54,4 +54,4 @@ for filename in os.listdir('./cogs'):
 
 
 
-client.run("ODcxMzgwNzI0NzYxMTI0OTE0.GxoXSI.sJbV43fveHiBpFesEpe8RfVg0G3nlZPlhxuEfU")
+client.run("ODcxMzgwNzI0NzYxMTI0OTE0.G9MpJe.oZioDXkU0dQY-bYnIHcPHegSJ-k1vFaddaXlTs")
