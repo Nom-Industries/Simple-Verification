@@ -127,7 +127,7 @@ class VerifyButton(nextcord.ui.View):
                             if (not veryrole in ctx.user.roles) or (unverifiedrole != None and unverifiedrole in ctx.user.roles):
                                 rangee = random.randint(4,5)
                                 result_str = ''.join(random.choice(letters) for i in range(rangee))
-                                image = ImageCaptcha(width = 280, height = 90, fonts=["nom.ttf", "GolosText-Regular.ttf", "NotoSerif-Regular.ttf", "Poppins-Regular.ttf", "Roboto-Regular.ttf", "SourceSansPro-Regular.ttf"], font_sizes=[80])
+                                image = ImageCaptcha(width = 280, height = 90, fonts=["nom.ttf", "GolosText-Regular.ttf", "NotoSerif-Regular.ttf", "Poppins-Regular.ttf", "Roboto-Regular.ttf", "SourceSansPro-Regular.ttf"], font_sizes=[60])
                                 data = image.generate(result_str.lower())
                                 image.write(result_str, f'{ctx.user.id}-captcha.jpg')
                                 embed=nextcord.Embed(title=(f"Captcha"), description=(f"""You have 1 minute to answer the captcha correctly. 
