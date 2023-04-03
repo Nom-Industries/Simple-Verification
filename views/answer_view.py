@@ -1,4 +1,5 @@
-import nextcord, string, io, random, os, pyttsx3
+import nextcord, string, io, random, os
+from gtts import gTTS
 from captcha.audio import AudioCaptcha
 
 
@@ -25,11 +26,9 @@ class AnswerButton(nextcord.ui.View):
     @nextcord.ui.button(label="Audio", style = nextcord.ButtonStyle.blurple, disabled=False)
     async def audio_captcha(self, button: nextcord.ui.Button, interaction: nextcord.Interaction):
         if not self.audio_sent:
-            engine = pyttsx3.init()
-            engine.setProperty('rate', 125) 
             answer = " ".join(letter for letter in self.actual_answer.split())
-            engine.save_to_file(answer, f'{interaction.user.id}-audio.mp3')
-            engine.runAndWait()
+            tts = gTTS(answer)
+            tts.save(f"{interaction.user.id}-audio.mp3")
             msg = await interaction.send(file=nextcord.File(f"{interaction.user.id}-audio.mp3", f"{interaction.user}-audio.mp3"), ephemeral=True)
             os.remove(f"{interaction.user.id}-audio.mp3")
             self.audio_sent=True
