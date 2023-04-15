@@ -164,7 +164,7 @@ If you get it wrong just click the verify button again and retry"""), colour=0xa
                                         except:
                                             pass
                                         return
-                                    if answer == result_str:
+                                    if answer.lower() == result_str:
                                         embed =nextcord.Embed(title="Verification", description=f"{ctx.user.mention} has successfully verified", colour=0x00ff00)
                                         try:
                                             await ctx.user.add_roles(veryrole)
