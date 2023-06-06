@@ -135,7 +135,7 @@ class VerifyButton(nextcord.ui.View):
                                 bytes.seek(0)
                                 embed=nextcord.Embed(title=(f"Captcha"), description=(f"""You have 1 minute to answer the captcha correctly. 
                                                                                 
-The captcha will only be **undercase** **letters**.
+The captcha will only be **under case** **letters**.
 If you get it wrong just click the verify button again and retry"""), colour=0xadd8e6)
                                 try:
                                     answerview = AnswerButton(actual_answer=result_str)
