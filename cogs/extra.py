@@ -30,7 +30,7 @@ class Extras(commands.Cog):
         before = time.monotonic()
         msg = await ctx.send("Loading bot information")
         ping = (time.monotonic() - before) * 1000
-        embed = nextcord.Embed(title="Bot Information", description=f"""Ping: {round(ping)}ms
+        embed = nextcord.Embed(title="Simple Verification Bot Information", description=f"""Ping: {round(ping)}ms
 Server count: {str(len(self.client.guilds))}
 Support Server: [Need some support?](https://nomindustries.com/SV/invite)
 Invite: [Invite Me](https://nomindustries.com/SV/invite)
