@@ -10,6 +10,7 @@ import time
 import io
 import math
 import datetime
+from difflib import SequenceMatcher
 
 verifying = []
 letters = ["a ", "b ", "c ", "d ", "e ", "g ", "k ", "m ", "n ", "o ", "p ", "q ", "s ", "u ", "v ", "w ", "x ", "y ", "z "]
@@ -32,6 +33,22 @@ class VerifyButton(nextcord.ui.View):
             self.DBPASS = configData["DBPASS"]
             self.DBNAME = configData["DBNAME"]
             self.DBENDPOINT = configData["DBENDPOINT"]
+
+    async def generate_captcha_string(self):
+        result_str = ""
+        allowed = False
+        f = open("./filter/filter.txt", "r")
+        lines = f.readlines()
+        while not allowed:
+            rangee = random.randint(4,5)
+            result_str = ''.join(random.choice(letters) for i in range(rangee))
+            allowed = True
+            for line in lines:
+                similarity = SequenceMatcher(None, (result_str.lower().replace(" ", "")), (line.strip().lower().replace(" ", "")))
+                if similarity.ratio() > 0.5:
+                    allowed=False
+
+        return result_str
 
     @nextcord.ui.button(label='Verify', style=nextcord.ButtonStyle.green, custom_id='verify_button_view:verify')
     async def verify(self, button: nextcord.ui.Button, ctx: nextcord.Interaction):
@@ -126,8 +143,7 @@ class VerifyButton(nextcord.ui.View):
                                 logchannelid = data[3]
                                 logchannel = ctx.guild.get_channel(int(logchannelid))
                             if (not veryrole in ctx.user.roles) or (unverifiedrole != None and unverifiedrole in ctx.user.roles):
-                                rangee = random.randint(4,5)
-                                result_str = ''.join(random.choice(letters) for i in range(rangee))
+                                result_str = await self.generate_captcha_string()
                                 image = ImageCaptcha(width = 280, height = 90, fonts=["nom.ttf", "GolosText-Regular.ttf", "NotoSerif-Regular.ttf", "Poppins-Regular.ttf", "Roboto-Regular.ttf", "SourceSansPro-Regular.ttf"], font_sizes=[60])
                                 data = image.generate(result_str.lower())
                                 bytes = io.BytesIO()
