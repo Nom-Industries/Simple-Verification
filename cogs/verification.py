@@ -45,7 +45,7 @@ class VerifyButton(nextcord.ui.View):
             allowed = True
             for line in lines:
                 similarity = SequenceMatcher(None, (result_str.lower().replace(" ", "")), (line.strip().lower().replace(" ", "")))
-                if similarity.ratio() > 0.6:
+                if similarity.ratio() > 0.5:
                     allowed=False
 
         return result_str
