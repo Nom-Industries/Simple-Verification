@@ -6,6 +6,7 @@ import json, pymysql, asyncio, random, string, os, sys
 from captcha.audio import AudioCaptcha
 from captcha.image import ImageCaptcha
 from views.answer_view import AnswerModal,AnswerButton
+from views.embed_manager_views import EmbedCreationForm
 import time
 import io
 import math
@@ -281,25 +282,11 @@ class VerifyMessage(commands.Cog):
         )):
         client = self.client
         if ctx.user.guild_permissions.administrator == True:
-            await ctx.response.defer()
             if custom:
-                def check(message):
-                    return message.author == ctx.user and message.channel == ctx.channel
-                try:
-                    titleq = await ctx.send("What do you want the title to be?")
-                    title = await self.client.wait_for('message', check=check, timeout = 300)
-                    descq = await title.reply("What do you want the description to be?")
-                    desc = await self.client.wait_for("message", check=check, timeout=300)
-                    if len(title.content) > 255:
-                        await ctx.send("Your title must be less than 255 characters")
-                    elif len(desc.content) > 3900:
-                        await ctx.send("Your description must be less than 3900 characters")
-                    elif len(title.content) + len(desc.content) > 4000:
-                        await ctx.send("You description and title must be below 4000 characters")
-                    else:
-                        embed=nextcord.Embed(title=f"{title.content}", description=f"{desc.content}", colour=0xadd8e6)
-                except asyncio.TimeoutError:
-                    await ctx.send("You took too long to answer. Please try again")
+                options = EmbedCreationForm()
+                await ctx.response.send_modal(modal=options)
+                await options.wait()
+                embed = nextcord.Embed(title=options.embedtitle, description=options.embeddescription, colour=0xadd8e6)
             else:
                 embed=nextcord.Embed(title=f"Verification", description=f"To verify in the server press the button below and follow the instructions from there.", colour=0xadd8e6)
             try:
