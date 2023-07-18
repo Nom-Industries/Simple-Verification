@@ -327,6 +327,10 @@ class VerifyMessage(commands.Cog):
                         await member.kick(reason=f"Account age below server limit of {days} days")
                         index = verifying.index(member.id)
                         del verifying[index]
+            if not data[2] == None:
+                role = member.guild.get_role(int(data[2]))
+                await member.add_roles(role)
+            
 
 
 
