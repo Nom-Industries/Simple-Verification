@@ -37,14 +37,6 @@ Invite: [Invite Me](https://nomindustries.com/SV/invite)
 Vote: [Vote for me](https://nomindustries.com/SV/vote)
 Privacy; [Privacy Policy](https://nomindustries.com/SV/privacy)""", colour=0xadd8e6)
         await msg.edit(content = " ", embed=embed, view=BotInfoLinkButton())
-
-    @nextcord.slash_command(name="guildinfo", description="[ADMIN ONLY]", guild_ids=[1015361041024155770])
-    async def _guildinfo(self, ctx:Interaction):
-        await ctx.response.defer(ephemeral=True)
-        if ctx.user.id == 326065974950363136:
-            for i in self.client.guilds:
-                await ctx.user.send(len(i.members))
-                await asyncio.sleep(1)
     
     @nextcord.slash_command(name="privacy", description=f"Get the link to our privacy policy")
     async def privacy_policy(self, ctx:Interaction):
