@@ -4,3 +4,4 @@ DBNAME = "testee"
 DBENDPOINT = "testee"
 
 BLA = "bla"
+HA = "ha"
