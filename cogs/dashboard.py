@@ -18,7 +18,7 @@ class Dashboard(commands.Cog):
         if not data:
             cur.execute(f"INSERT INTO guild_configs (id) VALUES ('{interaction.guild.id}')")
             conn.commit()
-        embed = nextcord.Embed(title=f"Verification Dashboard", description=f"""Verified Role: {(",".join([('<@&' + i + '> ') for i in data[0][1].split(",")])) if data[0][1] else 'Not Set'}""")
+        embed = nextcord.Embed(title=f"Verification Dashboard", description=f"""Verified Role(s): {(",".join([('<@&' + i + '> ') for i in data[0][1].split(",")])) if data[0][1] else 'Not Set'} \nUnverified Role(s): {(",".join([('<@&' + i + '> ') for i in data[0][2].split(",")])) if data[0][2] else 'Not Set'}""")
         view = DashboardButtons(premium=check_premium(self, guild = True, user = False, type_id=interaction.guild.id))
         await interaction.send(embed=embed, view=view)
 

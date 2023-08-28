@@ -20,11 +20,11 @@ class Premium(commands.Cog):
             required = True
         )):
         await interaction.response.defer()
-        if not check_premium(False, True, interaction.user.id):
-            await interaction.send(embed=create_error_embed(title=f"No premium subscription", description=f"You are not currently subscribed to any of our premium subscriptions. To purchase premium please follow [this link]({PREMIUMLINK})\n\n\nPlease Note: If you recently subscribed to premium it may take up to 30 minutes to register your subscription. If you are still unable to use this command in 30 minutes, please create a ticket in "))
+        if not check_premium(self, False, True, interaction.user.id):
+            await interaction.send(embed=create_error_embed(title=f"No premium subscription", description=f"You are not currently subscribed to any of our premium subscriptions. To purchase premium please follow [this link]({PREMIUMLINK})\n\n\nPlease Note: If you recently subscribed to premium it may take up to 30 minutes to register your subscription. If you are still unable to use this command in 30 minutes, please create a ticket in <#1111392014529990656>"))
             return
 
-        if check_premium(True, False, guildid):
+        if check_premium(self, True, False, guildid):
             await interaction.send(embed=create_warning_embed(title=f"Guild already added", description=f"This guild is already added to your premium subscription."))
             return
         
@@ -40,6 +40,10 @@ class Premium(commands.Cog):
 
         servers_used = len(data) if data else 0
 
+        if servers_available <= servers_used:
+            await interaction.send(embed=create_warning_embed(title=f"Max Servers Reached", description=f"You have reached the limit of premium servers that your current premium subscription allows for (``{servers_available}``). To increase this limit, upgrade your premium subscription via [this link]({PREMIUMLINK})"))
+            return
+        
 
     
 
