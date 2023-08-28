@@ -1,4 +1,4 @@
 DBUSER = "testee"
 DBPASS = "testee"
 DBNAME = "testee"
-DBENDPOINT = "test"
+DBENDPOINT = "testee"
