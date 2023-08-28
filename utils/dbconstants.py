@@ -5,3 +5,5 @@ DBENDPOINT = "testee"
 
 BLA = "bla"
 HA = "ha"
+
+ATR = "atr"

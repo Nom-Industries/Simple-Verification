@@ -15,7 +15,6 @@ class Bot(commands.Bot):
 
     async def on_ready(self):
         if not self.persistent_views_added:
-            self.add_view(VerifyButton(client))
             self.persistent_views_added = True
 
         print(f"Logged in as {client.user}!")
