@@ -21,11 +21,11 @@ def check_premium(self, guild: bool, user: bool, type_id: str):
     conn = pymysql.connect(host=DBENDPOINT, port=3306, user=DBUSER, password=DBPASS, db=DBNAME)
     cur = conn.cursor()
     if guild:
-        cur.execute(f"SELECT * FROM sv_premium_guilds WHERE id='{type_id}'")
+        cur.execute(f"SELECT * FROM sv_premium_guilds WHERE guild_id='{type_id}'")
         data = cur.fetchall()
         return True if data else False
     elif user:
-        cur.execute(f"SELECT * FROM sv_premium_users WHERE id='{type_id}'")
+        cur.execute(f"SELECT * FROM sv_premium_users WHERE user_id='{type_id}'")
         data = cur.fetchall()
         return True if data else False
     return None

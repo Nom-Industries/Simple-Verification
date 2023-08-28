@@ -16,3 +16,8 @@ class RoleSelect(nextcord.ui.View):
         super().__init__()
         self.add_item(RoleSelectDropdown(minvalue=minvalue, maxvalue=maxvalue, text=text))
         self.values = []
+
+    @nextcord.ui.button(label="Remove Roles", style=nextcord.ButtonStyle.red, disabled=False)
+    async def remove(self, button: nextcord.ui.Button, interaction: Interaction):
+        self.stop()
+    
