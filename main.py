@@ -1,7 +1,6 @@
 import nextcord
 import json
 import os
-from cogs.verification import VerifyButton
 from nextcord.ext import commands , tasks
 import requests
 os.chdir("./")
