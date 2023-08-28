@@ -3,6 +3,8 @@ import json
 import os
 from nextcord.ext import commands , tasks
 import requests
+from utils.constants import TOKEN
+
 os.chdir("./")
 
 
@@ -52,4 +54,4 @@ for filename in os.listdir('./cogs'):
 
 
 
-client.run("ODcxMzgwNzI0NzYxMTI0OTE0.GrrFch.XwoIEbolc2cqJh4IfqER4xlDOGoExX2wFIZANY")
+client.run(TOKEN)
