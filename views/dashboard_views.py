@@ -2,6 +2,7 @@ import nextcord, pymysql
 from utils import DBENDPOINT, DBNAME, DBPASS, DBUSER, COLOUR_MAIN, create_error_embed, DISCORDLINK, create_success_embed, PREMIUMLINK, generate_dashboard
 from nextcord import Interaction
 from .role_select import RoleSelect, ChannelSelect
+from .length_modal import LengthModal
 
 class DashboardButtons(nextcord.ui.View):
     def __init__(self, premium: bool = False):
@@ -121,3 +122,42 @@ class DashboardButtons(nextcord.ui.View):
             embed = generate_dashboard(data=dataa)
             await interaction.message.edit(embed=embed)
             await msg.edit(embed=create_success_embed(title="Success", description="Successfully updated log channel."), view=None)
+
+        @nextcord.ui.button(label="Set Autokick Account Age", style=nextcord.ButtonStyle.blurple, disabled=False)
+        async def set_autokick_account_age(self, button: nextcord.ui.Button, interaction: Interaction):
+            await interaction.response.defer(with_message=True, ephemeral=True)
+            form = LengthModal()
+            await interaction.response.send_modal(modal=form)
+            await form.wait()
+
+            conn = pymysql.connect(host=DBENDPOINT, port=3306, user=DBUSER, password=DBPASS, db=DBNAME)
+            cur = conn.cursor()
+            cur.execute(f"SELECT * FROM guild_configs WHERE id='{interaction.guild.id}'")
+            data = cur.fetchall()
+            if not data:
+                await msg.edit(embed=create_error_embed(title="Error!", description=f"Failed to fetch your guild data, please report this in our [Support Server]({DISCORDLINK})"), view=None)
+                conn.commit()
+                self.stop()
+                return
+            
+            try:
+                length = int(form.age)
+            except:
+                await interaction.send(embed=create_error_embed(title="Error", description="An invalid duration was supplied, the duration must be a whole positive number"))
+                return
+
+            if length < 0:
+                await interaction.send(embed=create_error_embed(title="Error", description="An invalid duration was supplied, the duration must be a whole positive number"))
+                return
+            
+            cur.execute(f"UPDATE `guild_configs` SET autokick = '{length}' WHERE id='{interaction.guild.id}'")
+            conn.commit()
+            
+            conn = pymysql.connect(host=DBENDPOINT, port=3306, user=DBUSER, password=DBPASS, db=DBNAME)
+            cur = conn.cursor()
+            cur.execute(f"SELECT * FROM guild_configs WHERE id='{interaction.guild.id}'")
+            dataa = cur.fetchall()
+
+            embed = generate_dashboard(data=dataa)
+            await interaction.message.edit(embed=embed)
+            await interaction.send(embed=create_success_embed(title="Success", description="Successfully updated log channel."), view=None)
