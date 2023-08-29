@@ -2,7 +2,7 @@ import nextcord
 import pymysql
 from nextcord.ext import commands
 from nextcord import Interaction, SlashOption
-from utils import check_premium, create_error_embed, create_warning_embed, PREMIUMLINK, DBENDPOINT, DBUSER, DBPASS, DBNAME
+from utils import check_premium, create_error_embed, create_warning_embed, create_success_embed, PREMIUMLINK, DBENDPOINT, DBUSER, DBPASS, DBNAME
 
 class Premium(commands.Cog):
     def __init__(self, client: commands.Bot):
@@ -43,6 +43,17 @@ class Premium(commands.Cog):
         if servers_available <= servers_used:
             await interaction.send(embed=create_warning_embed(title=f"Max Servers Reached", description=f"You have reached the limit of premium servers that your current premium subscription allows for (``{servers_available}``). To increase this limit, upgrade your premium subscription via [this link]({PREMIUMLINK})"))
             return
+        
+        try:
+            guild = self.get_guild(int(guildid))
+        except:
+            await interaction.send(embed=create_error_embed(title=f"Invalid guild ID", description=f"You have given an invalid guild ID. Please use the `/debug` command in the guild you want to add premium to to get the correct guild ID."))
+            return
+        
+        cur.execute("INSERT INTO sv_premium_guilds VALUES (user_id, guild_id) SET (%s, %s)", (interaction.user.id, guildid))
+        conn.commit()
+
+        await interaction.send(embed=create_success_embed(title=f"Premium server added", description=f"You have succesfully given `{guild.name} ({guild.id})` to your premium subscription."))
         
 
     
