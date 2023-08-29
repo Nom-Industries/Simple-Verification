@@ -1,6 +1,6 @@
 import nextcord
 import pymysql
-from nextcord.ext import commands
+from nextcord.ext import commands, tasks
 from nextcord import Interaction, SlashOption
 from utils import check_premium, create_error_embed, create_warning_embed, create_success_embed, PREMIUMLINK, DBENDPOINT, DBUSER, DBPASS, DBNAME
 
@@ -56,7 +56,19 @@ class Premium(commands.Cog):
         await interaction.send(embed=create_success_embed(title=f"Premium server added", description=f"You have succesfully given `{guild.name} ({guild.id})` to your premium subscription."))
         
 
-    
+
+
+    @tasks.loop(minutes=5)
+    async def premium_manager(self):
+        premium_role_ids = [1130511638794080419, 1130520156477608036, 1130520224689557554, 1130520278850613369, 1130520336744591431] # ACTUAL IDS = [1130511638794080419, 1130520156477608036, 1130520224689557554, 1130520278850613369, 1130520336744591431]
+        guild = self.get_guild(1111387758028652657) # ACTUAL ID = 1111387758028652657
+        premium_roles = [].append([role for role in guild.get_role([roleid for roleid in premium_role_ids])])
+
+        print(premium_roles)
+
+        for member in guild.members:
+            if premium_role_ids in member.roles:
+                pass
 
 def setup(client: commands.Bot):
     client.add_cog(Premium(client))
