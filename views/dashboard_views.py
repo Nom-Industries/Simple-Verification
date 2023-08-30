@@ -1,13 +1,51 @@
 import nextcord, pymysql
+from nextcord.interactions import Interaction
 from utils import DBENDPOINT, DBNAME, DBPASS, DBUSER, COLOUR_MAIN, create_error_embed, DISCORDLINK, create_success_embed, PREMIUMLINK, generate_dashboard
 from nextcord import Interaction
 from .role_select import RoleSelect, ChannelSelect
 from .length_modal import LengthModal
 
+
+class AutoVerificationButton(nextcord.ui.Button):
+    def __init__(self, premium: bool = False):
+        if premium:
+            super().__init__(label="Toggle Auto Verification", style=nextcord.ButtonStyle.blurple, disabled=False)
+        else:
+            super().__init__(label="Toggle Auto Verification", style=nextcord.ButtonStyle.blurple, disabled=True)
+
+    async def callback(self, interaction: Interaction):
+        conn = pymysql.connect(host=DBENDPOINT, port=3306, user=DBUSER, password=DBPASS, db=DBNAME)
+        cur = conn.cursor()
+        cur.execute(f"SELECT * FROM guild_configs WHERE id='{interaction.guild.id}'")
+        data = cur.fetchall()
+        if not data:
+            await interaction.send(embed=create_error_embed(title="Error!", description=f"Failed to fetch your guild data, please report this in our [Support Server]({DISCORDLINK})"), view=None)
+            conn.commit()
+            self.stop()
+            return
+        
+        if data[0][6] == "no":
+            cur.execute(f"UPDATE `guild_configs` SET autoveri = 'enabled' WHERE id='{interaction.guild.id}'")
+            embed = create_success_embed(title="Success", description="Successfully enabled autoverification.")
+        else:
+            cur.execute(f"UPDATE `guild_configs` SET autoveri = 'no' WHERE id='{interaction.guild.id}'")
+            embed = create_success_embed(title="Success", description="Successfully disabled autoverification.")
+
+        conn.commit()
+        conn = pymysql.connect(host=DBENDPOINT, port=3306, user=DBUSER, password=DBPASS, db=DBNAME)
+        cur = conn.cursor()
+        cur.execute(f"SELECT * FROM guild_configs WHERE id='{interaction.guild.id}'")
+        dataa = cur.fetchall()
+        eembed = generate_dashboard(data=dataa)
+        await interaction.message.edit(embed=eembed)
+        await interaction.send(embed=create_success_embed(title="Success", description="Successfully updated verification roles."), view=None)
+            
+
 class DashboardButtons(nextcord.ui.View):
     def __init__(self, premium: bool = False):
         super().__init__(timeout=300)
         self.premium = premium
+        self.add_item(AutoVerificationButton(premium=premium))
 
     @nextcord.ui.button(label="Set Verification Roles", style=nextcord.ButtonStyle.blurple, disabled=False)
     async def set_verification_role(self, button: nextcord.ui.Button, interaction: Interaction):
@@ -135,7 +173,7 @@ class DashboardButtons(nextcord.ui.View):
             cur.execute(f"SELECT * FROM guild_configs WHERE id='{interaction.guild.id}'")
             data = cur.fetchall()
             if not data:
-                await msg.edit(embed=create_error_embed(title="Error!", description=f"Failed to fetch your guild data, please report this in our [Support Server]({DISCORDLINK})"), view=None)
+                await interaction.send(embed=create_error_embed(title="Error!", description=f"Failed to fetch your guild data, please report this in our [Support Server]({DISCORDLINK})"), view=None)
                 conn.commit()
                 self.stop()
                 return

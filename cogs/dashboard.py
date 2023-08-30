@@ -28,5 +28,8 @@ class Dashboard(commands.Cog):
         view = DashboardButtons(premium=check_premium(self, guild = True, user = False, type_id=interaction.guild.id))
         await interaction.send(embed=embed, view=view, ephemeral=True)
 
+        
+
+
 def setup(client: commands.Bot):
     client.add_cog(Dashboard(client))
