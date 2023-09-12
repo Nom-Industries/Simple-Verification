@@ -72,5 +72,12 @@ Privacy: [Privacy Policy]({PRIVACYLINK})""", colour=COLOUR_MAIN)
             await interaction.send(f"This server's shard is shard **{guild_shard+1}** with `{round(guildspecshard.latency*100)}ms` and `{guild_shard_servers} servers`", embed=nextcord.Embed(title=f"Simple Verification Shard Information", description=f"All current shards:\n {description}", colour=COLOUR_MAIN))
 
 
+    @nextcord.slash_command(name=f"debug", description=f"Get information useful for debugging")
+    @cooldowns.cooldown(1,10, bucket=cooldowns.SlashBucket.channel)
+    async def _debug(self, interaction:Interaction):
+        await interaction.response.defer()
+        await interaction.send(f"**Guild ID:** {interaction.guild.id}\n**Channel ID:** {interaction.channel.id}")
+
+
 def setup(client: commands.Bot):
     client.add_cog(Misc(client))

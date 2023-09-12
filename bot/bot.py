@@ -7,9 +7,7 @@ from utils.constants import TOKEN
 
 class Bot(commands.AutoShardedBot):
     def __init__(self):
-        intents = nextcord.Intents.all()
-        intents.presences = False
-        super().__init__(shard_count=1, command_prefix="nom!", intents=nextcord.Intents.all())
+        super().__init__(shard_count=1, command_prefix="nom!")
         self.unloaded_cogs = []
 
     def initialize(self):
