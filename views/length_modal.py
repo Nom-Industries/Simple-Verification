@@ -7,7 +7,7 @@ class LengthModal(nextcord.ui.Modal):
         super().__init__(title="Set account age", timeout=None)
 
         self.length = nextcord.ui.TextInput(
-                label = "How old do you want accounts to have to be (days)",
+                label = "How old should accounts be (in days)",
                 placeholder = "To disable autokick put 0",
                 style=nextcord.TextInputStyle.short,
                 min_length=1,

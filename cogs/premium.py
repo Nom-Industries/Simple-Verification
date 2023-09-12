@@ -45,12 +45,12 @@ class Premium(commands.Cog):
             return
         
         try:
-            guild = self.get_guild(int(guildid))
+            guild = self.client.get_guild(int(guildid))
         except:
             await interaction.send(embed=create_error_embed(title=f"Invalid guild ID", description=f"You have given an invalid guild ID. Please use the `/debug` command in the guild you want to add premium to to get the correct guild ID."))
             return
         
-        cur.execute("INSERT INTO sv_premium_guilds VALUES (user_id, guild_id) SET (%s, %s)", (interaction.user.id, guildid))
+        cur.execute("INSERT INTO sv_premium_guilds (user_id, guild_id) VALUES (%s, %s)", (str(interaction.user.id), guildid))
         conn.commit()
 
         await interaction.send(embed=create_success_embed(title=f"Premium server added", description=f"You have succesfully given `{guild.name} ({guild.id})` to your premium subscription."))
