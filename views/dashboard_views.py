@@ -3,7 +3,7 @@ from nextcord.interactions import Interaction
 from utils import DBENDPOINT, DBNAME, DBPASS, DBUSER, COLOUR_MAIN, create_error_embed, DISCORDLINK, create_success_embed, PREMIUMLINK, generate_dashboard
 from nextcord import Interaction
 from .role_select import RoleSelect, ChannelSelect
-from .length_modal import LengthModal
+from .length_modal import LengthModal, CaptchaLengthModal
 
 
 class AutoVerificationButton(nextcord.ui.Button):
@@ -42,7 +42,7 @@ class AutoVerificationButton(nextcord.ui.Button):
         await self.msg.edit(embed=eembed)
         await interaction.send(embed=create_success_embed(title="Success", description="Successfully updated your auto verification setting."), ephemeral=True)
 
-class AutoVerificationButton(nextcord.ui.Button):
+class MinLengthButton(nextcord.ui.Button):
     def __init__(self, msg, premium: bool = False):
         if premium:
             super().__init__(label="Set Min Captcha Length", style=nextcord.ButtonStyle.blurple, disabled=False)
@@ -51,7 +51,6 @@ class AutoVerificationButton(nextcord.ui.Button):
         self.msg = msg
 
     async def callback(self, interaction: Interaction):
-        await interaction.response.defer(with_message=True, ephemeral=True)
         conn = pymysql.connect(host=DBENDPOINT, port=3306, user=DBUSER, password=DBPASS, db=DBNAME)
         cur = conn.cursor()
         cur.execute(f"SELECT * FROM guild_configs WHERE id='{interaction.guild.id}'")
@@ -62,21 +61,102 @@ class AutoVerificationButton(nextcord.ui.Button):
             self.stop()
             return
         
-        if data[0][6] == "no":
-            cur.execute(f"UPDATE `guild_configs` SET autoveri = 'enabled' WHERE id='{interaction.guild.id}'")
-            embed = create_success_embed(title="Success", description="Successfully enabled autoverification.")
-        else:
-            cur.execute(f"UPDATE `guild_configs` SET autoveri = 'no' WHERE id='{interaction.guild.id}'")
-            embed = create_success_embed(title="Success", description="Successfully disabled autoverification.")
+        form = CaptchaLengthModal()
+        await interaction.response.send_modal(modal=form)
+        await form.wait()
 
+        conn = pymysql.connect(host=DBENDPOINT, port=3306, user=DBUSER, password=DBPASS, db=DBNAME)
+        cur = conn.cursor()
+        cur.execute(f"SELECT * FROM guild_configs WHERE id='{interaction.guild.id}'")
+        data = cur.fetchall()
+        if not data:
+            await interaction.send(embed=create_error_embed(title="Error!", description=f"Failed to fetch your guild data, please report this in our [Support Server]({DISCORDLINK})"), view=None, ephemeral=True)
+            conn.commit()
+            self.stop()
+            return
+        
+        try:
+            length = int(form.captcha_length)
+        except:
+            await interaction.send(embed=create_error_embed(title="Error", description="An invalid captcha length was supplied, the captcha length must be a whole positive number"), ephemeral=True)
+            return
+
+        if length < 1:
+            await interaction.send(embed=create_error_embed(title="Error", description="An invalid captcha length was supplied, the captcha length must be a whole positive number. (Minimum of 1)"), ephemeral=True)
+            return
+        elif length > 12:
+            await interaction.send(embed=create_error_embed(title="Error", description="An invalid captcha length was supplied, the captcha length must be a whole positive number. (Maximum of 12)"), ephemeral=True)
+            return
+        
+        cur.execute(f"UPDATE `guild_configs` SET min_captcha_len = '{length}' WHERE id='{interaction.guild.id}'")
         conn.commit()
+        
         conn = pymysql.connect(host=DBENDPOINT, port=3306, user=DBUSER, password=DBPASS, db=DBNAME)
         cur = conn.cursor()
         cur.execute(f"SELECT * FROM guild_configs WHERE id='{interaction.guild.id}'")
         dataa = cur.fetchall()
-        eembed = generate_dashboard(self, data=dataa)
-        await self.msg.edit(embed=eembed)
-        await interaction.send(embed=create_success_embed(title="Success", description="Successfully updated your auto verification setting."), ephemeral=True)
+
+        embed = generate_dashboard(self, data=dataa)
+        await self.msg.edit(embed=embed)
+        await interaction.send(embed=create_success_embed(title="Success", description="Successfully updated minimum captcha length."), ephemeral=True)
+
+class MaxLengthButton(nextcord.ui.Button):
+    def __init__(self, msg, premium: bool = False):
+        if premium:
+            super().__init__(label="Set Max Captcha Length", style=nextcord.ButtonStyle.blurple, disabled=False)
+        else:
+            super().__init__(label="Set Max Captcha Length", style=nextcord.ButtonStyle.blurple, disabled=True)
+        self.msg = msg
+
+    async def callback(self, interaction: Interaction):
+        conn = pymysql.connect(host=DBENDPOINT, port=3306, user=DBUSER, password=DBPASS, db=DBNAME)
+        cur = conn.cursor()
+        cur.execute(f"SELECT * FROM guild_configs WHERE id='{interaction.guild.id}'")
+        data = cur.fetchall()
+        if not data:
+            await interaction.send(embed=create_error_embed(title="Error!", description=f"Failed to fetch your guild data, please report this in our [Support Server]({DISCORDLINK})"), view=None)
+            conn.commit()
+            self.stop()
+            return
+        
+        form = CaptchaLengthModal()
+        await interaction.response.send_modal(modal=form)
+        await form.wait()
+
+        conn = pymysql.connect(host=DBENDPOINT, port=3306, user=DBUSER, password=DBPASS, db=DBNAME)
+        cur = conn.cursor()
+        cur.execute(f"SELECT * FROM guild_configs WHERE id='{interaction.guild.id}'")
+        data = cur.fetchall()
+        if not data:
+            await interaction.send(embed=create_error_embed(title="Error!", description=f"Failed to fetch your guild data, please report this in our [Support Server]({DISCORDLINK})"), view=None, ephemeral=True)
+            conn.commit()
+            self.stop()
+            return
+        
+        try:
+            length = int(form.captcha_length)
+        except:
+            await interaction.send(embed=create_error_embed(title="Error", description="An invalid captcha length was supplied, the captcha length must be a whole positive number"), ephemeral=True)
+            return
+
+        if length < 1:
+            await interaction.send(embed=create_error_embed(title="Error", description="An invalid captcha length was supplied, the captcha length must be a whole positive number. (Minimum of 1)"), ephemeral=True)
+            return
+        elif length > 12:
+            await interaction.send(embed=create_error_embed(title="Error", description="An invalid captcha length was supplied, the captcha length must be a whole positive number. (Maximum of 12)"), ephemeral=True)
+            return
+        
+        cur.execute(f"UPDATE `guild_configs` SET max_captcha_len = '{length}' WHERE id='{interaction.guild.id}'")
+        conn.commit()
+        
+        conn = pymysql.connect(host=DBENDPOINT, port=3306, user=DBUSER, password=DBPASS, db=DBNAME)
+        cur = conn.cursor()
+        cur.execute(f"SELECT * FROM guild_configs WHERE id='{interaction.guild.id}'")
+        dataa = cur.fetchall()
+
+        embed = generate_dashboard(self, data=dataa)
+        await self.msg.edit(embed=embed)
+        await interaction.send(embed=create_success_embed(title="Success", description="Successfully updated maximum captcha length."), ephemeral=True)
             
 
 class DashboardButtons(nextcord.ui.View):
@@ -85,6 +165,8 @@ class DashboardButtons(nextcord.ui.View):
         self.premium = premium
         self.msg = msg
         self.add_item(AutoVerificationButton(msg = msg, premium=premium))
+        self.add_item(MinLengthButton(msg = msg, premium=premium))
+        self.add_item(MaxLengthButton(msg = msg, premium=premium))
 
     @nextcord.ui.button(label="Set Verification Roles", style=nextcord.ButtonStyle.blurple, disabled=False)
     async def set_verification_role(self, button: nextcord.ui.Button, interaction: Interaction):
@@ -238,4 +320,4 @@ class DashboardButtons(nextcord.ui.View):
 
         embed = generate_dashboard(self, data=dataa)
         await self.msg.edit(embed=embed)
-        await interaction.send(embed=create_success_embed(title="Success", description="Successfully updated log channel."), ephemeral=True)
+        await interaction.send(embed=create_success_embed(title="Success", description="Successfully updated autokick minimum account age."), ephemeral=True)
