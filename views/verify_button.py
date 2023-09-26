@@ -9,7 +9,7 @@ class VerifyButton(nextcord.ui.View):
         super().__init__(timeout=None)
         self.add_item(nextcord.ui.Button(label="Privacy Policy", url=PRIVACYLINK))
 
-    @nextcord.ui.button(label="Verify", style=nextcord.ButtonStyle.green, disabled=False)
+    @nextcord.ui.button(label="Verify", style=nextcord.ButtonStyle.green, disabled=False, custom_id="verify_button")
     async def verify_button(self, button: nextcord.ui.Button, interaction: Interaction):
         pass
 
