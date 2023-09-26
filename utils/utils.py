@@ -37,8 +37,8 @@ def generate_dashboard(self, data):
         autov = "Enabled"
     return nextcord.Embed(title=f"Verification Dashboard", description=f"""Verified Role(s): {(",".join([('<@&' + i + '> ') for i in data[0][1].split(",")])) if data[0][1] else 'Not Set'}\nUnverified Role(s): {(",".join([('<@&' + i + '> ') for i in data[0][2].split(",")])) if data[0][2] else 'Not Set'} \nLog Channel: <#{data[0][3] if data[0][3] else 'Not Set'}> \nAuto Kick: {f"{data[0][5]} day(s)" if data[0][5] else 'Not Set'} \nAuto Verification ([Premium]({PREMIUMLINK}) Only): {autov}\nMinimum Captcha Length ([Premium]({PREMIUMLINK}) Only): {data[0][7]}\nMaximum Captcha Length ([Premium]({PREMIUMLINK}) Only): {data[0][8]}""")
 
-def generate_random_string(length: int = 0):
-    return ''.join([random.choice(ascii_letters+digits) for i in range(length if length else random.randint(5, 10))])
+def generate_random_string(min_length: int = 4, max_length: int = 5):
+    return ''.join([random.choice(ascii_letters+digits) for i in range(min_length, max_length)])
 
 def get_user_name(user) -> str:
     if not str(user.discriminator) == "0":
