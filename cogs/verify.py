@@ -37,6 +37,9 @@ class Verify(commands.Cog):
             cur.execute(f"INSERT INTO guild_configs (id) VALUES ('{interaction.guild.id}')")
             conn.commit()
 
+        if (not data[1]) and (not data[2]): # Checks to see if verified roles are set.
+            await interaction.send(embed=create_error_embed(title="Incorrect Config!", description=f"You have no verified/unverified roles set, please use the `/dashboard` command to set them."))
+
         embed=nextcord.Embed(title=f"Verification", description=f"To verify in the server press the button below and follow the instructions from there.", colour=COLOUR_MAIN)
 
         if customembed == "True":
