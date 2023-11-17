@@ -1,6 +1,5 @@
 import nextcord
 from nextcord.interactions import Interaction
-from nextcord import Interaction
 
 class LengthModal(nextcord.ui.Modal):
     def __init__(self):

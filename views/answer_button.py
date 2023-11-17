@@ -1,6 +1,5 @@
-import nextcord, string, io, random, os
+import nextcord, io
 from gtts import gTTS
-from captcha.audio import AudioCaptcha
 
 
 

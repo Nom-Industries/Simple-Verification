@@ -9,7 +9,7 @@ class Dashboard(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client = client
 
-    @nextcord.slash_command(name=f"dashboard", description=f"Configure the bot on the in-discord dashboard")
+    @nextcord.slash_command(name="dashboard", description="Configure the bot on the in-discord dashboard")
     async def dashboard(self, interaction: Interaction):
         await interaction.response.defer(with_message=True, ephemeral=True)
         if not interaction.user.guild_permissions.administrator:

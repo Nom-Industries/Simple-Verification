@@ -1,6 +1,5 @@
 import nextcord
 from nextcord.interactions import Interaction
-from nextcord import Interaction
 
 class RoleSelectDropdown(nextcord.ui.RoleSelect):
     def __init__(self, minvalue=1, maxvalue=1, text="Select a role"):

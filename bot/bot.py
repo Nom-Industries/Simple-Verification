@@ -1,7 +1,6 @@
 import nextcord
-import json, asyncio
 import os
-from nextcord.ext import commands, tasks
+from nextcord.ext import commands
 from utils.utils import *
 from utils.constants import TOKEN
 

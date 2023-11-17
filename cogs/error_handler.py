@@ -1,6 +1,6 @@
 import nextcord
 from cooldowns import CallableOnCooldown
-from nextcord.ext import commands, application_checks
+from nextcord.ext import commands
 from bot.bot import Bot
 from nextcord.errors import Forbidden
 from utils import *
@@ -16,7 +16,7 @@ class Error_handler(commands.Cog):
         if isinstance(error, CallableOnCooldown):
             await interaction.send(f"That command is on cooldown. You can use it again <t:{int(error.retry_after) + round(int(time.time()))}:R>")
         elif isinstance(error, Forbidden):
-            await interaction.send(f"I don't have permission to do that")
+            await interaction.send("I don't have permission to do that")
         else:
             raise error
 

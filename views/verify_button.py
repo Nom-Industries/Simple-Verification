@@ -1,9 +1,7 @@
 import nextcord, pymysql, io, random
 from nextcord.interactions import Interaction
-from nextcord import Interaction
 from assets import *
-from utils import PRIVACYLINK, create_warning_embed, DBENDPOINT, DBNAME, DBPASS, DBUSER, COLOUR_MAIN, create_error_embed, generate_random_string, COLOUR_BAD, COLOUR_GOOD, DISCORDLINK
-from captcha.audio import AudioCaptcha
+from utils import PRIVACYLINK, create_warning_embed, DBENDPOINT, DBNAME, DBPASS, DBUSER, COLOUR_BAD, COLOUR_GOOD
 from captcha.image import ImageCaptcha
 from views import AnswerButton
 
@@ -61,7 +59,7 @@ async def add_unverified_role(guild, user, data):
 
 @staticmethod
 async def generate_started_log_embed(user, captcha_str, captcha_image):
-    embed = nextcord.Embed(title=f"Verification Started", description=f"{user.mention} started verification with the captcha attached. The answer to the captcha is `{str(captcha_str).replace(' ', '')}`", colour=COLOUR_GOOD)
+    embed = nextcord.Embed(title="Verification Started", description=f"{user.mention} started verification with the captcha attached. The answer to the captcha is `{str(captcha_str).replace(' ', '')}`", colour=COLOUR_GOOD)
     embed.set_author(name=f"{user.replace('#0', '')}", icon_url=user.avatar.url if user.avatar else None)
     embed.set_image(url=captcha_image)
     return embed
@@ -95,9 +93,8 @@ class VerifyButton(nextcord.ui.View):
 
     @nextcord.ui.button(label="Verify", style=nextcord.ButtonStyle.green, disabled=False, custom_id="verify_button")
     async def verify_button(self, button: nextcord.ui.Button, interaction: Interaction):
-        global verifying
         if interaction.user.id in verifying:
-            await interaction.send(embed=create_warning_embed(title=f"Already verifying", description=f"You are already verifying on Simple Verification. Please complete that verification to start a new one."), ephemeral=True)
+            await interaction.send(embed=create_warning_embed(title="Already verifying", description="You are already verifying on Simple Verification. Please complete that verification to start a new one."), ephemeral=True)
             return
         verifying.append(interaction.user.id)
         await interaction.response.defer(with_message=True, ephemeral=True)
@@ -106,16 +103,16 @@ class VerifyButton(nextcord.ui.View):
         cur.execute(f"SELECT * FROM guild_configs WHERE id='{interaction.guild.id}'")
         data = cur.fetchall()
         if not data or not data[1]:
-            await interaction.send(embed=create_warning_embed(title=f"Setup not complete", description=f"The bot is not properly configured in this server. Please talk to the server administrators to resolve this issue. (Think this is a mistake? Reach out to our support server [here](DISCORDLINK)!)"), ephemeral=True)
+            await interaction.send(embed=create_warning_embed(title="Setup not complete", description="The bot is not properly configured in this server. Please talk to the server administrators to resolve this issue. (Think this is a mistake? Reach out to our support server [here](DISCORDLINK)!)"), ephemeral=True)
             return
         
         min_captcha_length = int(data[7])
         max_captcha_length = int(data[8])
 
-        embed = nextcord.Embed(title=f"Captcha", description=f"You have 1 minute to complete the captcha attached. The captcha will only user **undercase** **letters**.")
+        embed = nextcord.Embed(title="Captcha", description="You have 1 minute to complete the captcha attached. The captcha will only user **undercase** **letters**.")
         captcha, answer_string = generate_captcha_image(min_captcha_length, max_captcha_length)
         answerview = AnswerButton(actual_answer=answer_string)
-        msg = await interaction.send(embed=embed, file=nextcord.File(captcha, f"captcha.jpg"), ephemeral=True)
+        msg = await interaction.send(embed=embed, file=nextcord.File(captcha, "captcha.jpg"), ephemeral=True)
         embed=generate_started_log_embed(interaction.user.id, answer_string, msg.attachments[0].url)
         await send_to_log_channel(guild=interaction.guild, embed=embed, data=data)
         await answerview.wait()

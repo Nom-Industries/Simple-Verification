@@ -8,11 +8,11 @@ class Help(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client = client
 
-    @nextcord.slash_command(name=f"help", description=f"Help command")
+    @nextcord.slash_command(name="help", description="Help command")
     async def help(self, interaction: Interaction):
         await interaction.response.defer()
-        embed = nextcord.Embed(title=(f"Help"), description=(f"""Below is a list of all commands you will need:"""), colour=COLOUR_MAIN)
-        embed.add_field(name=f"/dashboard", value=f"""Explanation: Manage the bot's settings
+        embed = nextcord.Embed(title=("Help"), description=("""Below is a list of all commands you will need:"""), colour=COLOUR_MAIN)
+        embed.add_field(name=f"/dashboard", value="""Explanation: Manage the bot's settings
 Requires: Administrator
 Usage: ``/dashboard``""")
         embed.add_field(name=f"/verifymessage", value=f"""Explanation: Send a verification message to a channel

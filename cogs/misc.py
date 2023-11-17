@@ -28,12 +28,12 @@ Vote: [Vote for me]({VOTELINK})
 Privacy: [Privacy Policy]({PRIVACYLINK})""", colour=COLOUR_MAIN)
         await msg.edit(content = " ", embed=embed, view=BotInfoLinkButton())
 
-    @nextcord.slash_command(name=f"privacy", description=f"Get the link to our privacy policy")
+    @nextcord.slash_command(name="privacy", description="Get the link to our privacy policy")
     async def privacy(self, interaction:Interaction):
         await interaction.send(content="", view=PrivacyPolicyButton())
 
 
-    @nextcord.slash_command(name=f"shardinfo", description=f"Get information on all shards")
+    @nextcord.slash_command(name="shardinfo", description="Get information on all shards")
     @cooldowns.cooldown(1, 30, bucket=cooldowns.SlashBucket.author)
     async def shardinfo(self, interaction:Interaction):
         await interaction.response.defer()
@@ -44,16 +44,16 @@ Privacy: [Privacy Policy]({PRIVACYLINK})""", colour=COLOUR_MAIN)
             description+=f"\n**Shard {shard+1}** has `{round(specshard.latency*100)}ms` latency with `{shard_servers} servers`"
 
         if not interaction.guild:
-            await interaction.send(embed=nextcord.Embed(title=f"Simple Verification Shard Information", description=f"All current shards:\n {description}", colour=COLOUR_MAIN))
+            await interaction.send(embed=nextcord.Embed(title="Simple Verification Shard Information", description=f"All current shards:\n {description}", colour=COLOUR_MAIN))
         else:
             guild_shard = interaction.guild.shard_id
             guildspecshard = self.client.get_shard(guild_shard)
             guild_shard_servers = len([guild for guild in self.client.guilds if guild.shard_id == guild_shard])
-            await interaction.send(f"This server's shard is shard **{guild_shard+1}** with `{round(guildspecshard.latency*100)}ms` and `{guild_shard_servers} servers`", embed=nextcord.Embed(title=f"Simple Verification Shard Information", description=f"All current shards:\n {description}", colour=COLOUR_MAIN))
+            await interaction.send(f"This server's shard is shard **{guild_shard+1}** with `{round(guildspecshard.latency*100)}ms` and `{guild_shard_servers} servers`", embed=nextcord.Embed(title="Simple Verification Shard Information", description=f"All current shards:\n {description}", colour=COLOUR_MAIN))
 
 
     
-    @nextcord.slash_command(name=f"shardinfo", description=f"Get information on all shards")
+    @nextcord.slash_command(name="shardinfo", description="Get information on all shards")
     @cooldowns.cooldown(1, 30, bucket=cooldowns.SlashBucket.author)
     async def shardinfo(self, interaction:Interaction):
         await interaction.response.defer()
@@ -64,15 +64,15 @@ Privacy: [Privacy Policy]({PRIVACYLINK})""", colour=COLOUR_MAIN)
             description+=f"\n**Shard {shard+1}** has `{round(specshard.latency*100)}ms` latency with `{shard_servers} servers`"
 
         if not interaction.guild:
-            await interaction.send(embed=nextcord.Embed(title=f"Simple Verification Shard Information", description=f"All current shards:\n {description}", colour=COLOUR_MAIN))
+            await interaction.send(embed=nextcord.Embed(title="Simple Verification Shard Information", description=f"All current shards:\n {description}", colour=COLOUR_MAIN))
         else:
             guild_shard = interaction.guild.shard_id
             guildspecshard = self.client.get_shard(guild_shard)
             guild_shard_servers = len([guild for guild in self.client.guilds if guild.shard_id == guild_shard])
-            await interaction.send(f"This server's shard is shard **{guild_shard+1}** with `{round(guildspecshard.latency*100)}ms` and `{guild_shard_servers} servers`", embed=nextcord.Embed(title=f"Simple Verification Shard Information", description=f"All current shards:\n {description}", colour=COLOUR_MAIN))
+            await interaction.send(f"This server's shard is shard **{guild_shard+1}** with `{round(guildspecshard.latency*100)}ms` and `{guild_shard_servers} servers`", embed=nextcord.Embed(title="Simple Verification Shard Information", description=f"All current shards:\n {description}", colour=COLOUR_MAIN))
 
 
-    @nextcord.slash_command(name=f"debug", description=f"Get information useful for debugging")
+    @nextcord.slash_command(name="debug", description="Get information useful for debugging")
     @cooldowns.cooldown(1,10, bucket=cooldowns.SlashBucket.channel)
     async def _debug(self, interaction:Interaction):
         await interaction.response.defer()

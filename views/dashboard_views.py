@@ -1,7 +1,6 @@
 import nextcord, pymysql, asyncio
 from nextcord.interactions import Interaction
 from utils import DBENDPOINT, DBNAME, DBPASS, DBUSER, COLOUR_MAIN, create_error_embed, DISCORDLINK, create_success_embed, PREMIUMLINK, generate_dashboard
-from nextcord import Interaction
 from .role_select import RoleSelect, ChannelSelect
 from .length_modal import LengthModal, CaptchaLengthModal
 
