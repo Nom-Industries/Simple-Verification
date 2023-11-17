@@ -12,12 +12,9 @@ class Help(commands.Cog):
     async def help(self, interaction: Interaction):
         await interaction.response.defer()
         embed = nextcord.Embed(title=(f"Help"), description=(f"""Below is a list of all commands you will need:"""), colour=COLOUR_MAIN)
-        embed.add_field(name=f"/config enable", value=f"""Explanation: Enable any settings you want to
+        embed.add_field(name=f"/dashboard", value=f"""Explanation: Manage the bot's settings
 Requires: Administrator
-Usage: ``/config enable``""")
-        embed.add_field(name=f"/config disable", value=f"""Explanation: Disable any settings you want to
-Requires: Administrator
-Usage: ``/config disable``""")
+Usage: ``/dashboard``""")
         embed.add_field(name=f"/verifymessage", value=f"""Explanation: Send a verification message to a channel
 Requires: Administrator
 Usage: ``/verifymessage <#channel> [Custom (True/False)]``""")
