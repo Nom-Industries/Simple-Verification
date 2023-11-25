@@ -43,18 +43,18 @@ async def add_verified_role(guild, user, data):
         await user.add_roles(verifiedrole)
         return True
     except:
-        pass
+        return False
 
 @staticmethod
-async def add_unverified_role(guild, user, data):
+async def remove_unverified_role(guild, user, data):
     unverifiedrole = await get_unverified_role(guild, data)
     if not unverifiedrole:
         return None
     try:
-        await user.add_roles(unverifiedrole)
+        await user.remove_roles(unverifiedrole)
         return True
     except:
-        pass
+        return False
 
 
 @staticmethod
@@ -64,12 +64,6 @@ async def generate_started_log_embed(user, captcha_str, captcha_image):
     embed.set_image(url=captcha_image)
     return embed
 
-@staticmethod
-async def generate_fail_embed(user, embed, fail_type, captcha_str):
-    embed.title = "Verification Failed"
-    embed.description = f"{user.mention} exceeded the 60 second time limit. The answer to the captcha was {captcha_str}." if fail_type == "time" else f"{user.mention} failed the captcha. The correct answer to the captcha was {captcha_str}."
-    embed.colour = COLOUR_BAD
-    return embed
 
 @staticmethod
 async def generate_captcha_string(min_length, max_length):
@@ -114,10 +108,38 @@ class VerifyButton(nextcord.ui.View):
         answerview = AnswerButton(actual_answer=answer_string)
         msg = await interaction.send(embed=embed, file=nextcord.File(captcha, "captcha.jpg"), ephemeral=True)
         embed=generate_started_log_embed(interaction.user.id, answer_string, msg.attachments[0].url)
-        await send_to_log_channel(guild=interaction.guild, embed=embed, data=data)
+        logmsg = await send_to_log_channel(guild=interaction.guild, embed=embed, data=data)
         await answerview.wait()
 
+        if answerview.answer == "Too Long ---------------":
+            await msg.delete()
+            await interaction.send(embed=nextcord.Embed(title="Captcha Failed", description=f"You failed the captcha because you ran out of time. Please press the verify button to try again.", colour=COLOUR_BAD))
+            return
+        
+        if not answerview.answer.lower() == answer_string.lower():
+            await msg.delete()
+            await interaction.send(embed=nextcord.Embed(title=f"Captcha Failed", description=f"You failed the captcha because you got the answer wrong. Please press the verify button to try again.", colour=COLOUR_BAD))
+            return
+        
+        error_embed = nextcord.Embed(title="Configuration Error", description="Your servers verified or unverified roles are not setup correctly. Please ensure I have the `manage_roles` permission and my highest role is **above** any of the roles you are attempting to give to users.", colour=COLOUR_BAD)
+        logembed = nextcord.Embed(title="Captcha Passed", description=f"{interaction.user.mention} has passed their captcha")
 
 
+        status = await remove_unverified_role(guild=interaction.guild, user=interaction.user, data=data)
+        if status == False:
+            await interaction.send(embed=create_warning_embed(title="Setup not complete", description="The bot is not properly configured in this server. Please talk to the server administrators to resolve this issue. (Think this is a mistake? Reach out to our support server [here](DISCORDLINK)!)"), ephemeral=True)
+            await logmsg.reply(embed=error_embed)
+            return
+        
+        status = await add_verified_role(guild=interaction.guild, user=interaction.user, data=data)
+        if status == False or status == None:
+            await interaction.send(embed=create_warning_embed(title="Setup not complete", description="The bot is not properly configured in this server. Please talk to the server administrators to resolve this issue. (Think this is a mistake? Reach out to our support server [here](DISCORDLINK)!)"), ephemeral=True)
+            await logmsg.reply(embed=error_embed)
+            return
+        
+        await msg.delete()
+        await interaction.send(embed=nextcord.Embed(title="Captcha Passed", description=f"You have successfully passed the captcha and now have access to the server.", colour=COLOUR_GOOD))
+        logembed = nextcord.Embed(title="Captcha Passed", description=f"{interaction.user.mention} has passed their captcha and thri roles have been updated.")
+        await logmsg.reply(embed=logembed)
         
         
