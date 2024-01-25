@@ -1,44 +1,29 @@
 import nextcord
-from nextcord.ext import commands, tasks
-from nextcord import Interaction, SlashOption
-import json
-
-
-class HelpButtons(nextcord.ui.View):
-    def __init__(self):
-        super().__init__()
-        self.add_item(nextcord.ui.Button(label="Support Server", url="https://discord.gg/aGzvXvTkP8"))
-        self.add_item(nextcord.ui.Button(label="Invite", url="https://discord.com/api/oauth2/authorize?client_id=981835181243658260&permissions=8&scope=bot%20applications.commands"))
-        self.add_item(nextcord.ui.Button(label="Vote", url="https://top.gg/bot/828584622156939274/vote"))
-
+from nextcord.ext import commands
+from nextcord import Interaction
+from utils.constants import COLOUR_MAIN, VOTELINK, INVITELINK, DISCORDLINK, PRIVACYLINK
+from views import BotInfoLinkButton
 
 class Help(commands.Cog):
-
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
-    
+
     @nextcord.slash_command(name="help", description="Help command")
-    async def help(self,
-        ctx: Interaction):
-        await ctx.response.defer()
-        embed = nextcord.Embed(title=(f"Help"), description=(f"""Below is a list of all commands you will need:"""), colour=0xadd8e6)
-        embed.add_field(name=f"/config enable", value=f"""Explanation: Enable any settings you want to
+    async def help(self, interaction: Interaction):
+        await interaction.response.defer()
+        embed = nextcord.Embed(title=("Help"), description=("""Below is a list of all commands you will need:"""), colour=COLOUR_MAIN)
+        embed.add_field(name=f"/dashboard", value="""Explanation: Manage the bot's settings
 Requires: Administrator
-Usage: ``/config enable``""")
-        embed.add_field(name=f"/config disable", value=f"""Explanation: Disable any settings you want to
-Requires: Administrator
-Usage: ``/config disable``""")
+Usage: ``/dashboard``""")
         embed.add_field(name=f"/verifymessage", value=f"""Explanation: Send a verification message to a channel
 Requires: Administrator
 Usage: ``/verifymessage <#channel> [Custom (True/False)]``""")
         embed.add_field(name=f"/botinfo", value=f"""Explanation: Shows general bot info
 Requires: None
 Usage: ``/botinfo``""")
-        embed.add_field(name="\u200B", value=f"[Support Server](https://discord.gg/aGzvXvTkP8) | [Invite Me](https://discord.com/api/oauth2/authorize?client_id=981835181243658260&permissions=8&scope=bot%20applications.commands) | [Vote](https://top.gg/bot/828584622156939274/vote)", inline=False)
+        embed.add_field(name="\u200B", value=f"[Support Server]({DISCORDLINK}) | [Invite Me]({INVITELINK}) | [Vote]({VOTELINK}) | [Privacy Policy]({PRIVACYLINK})", inline=False)
 
-
-        await ctx.send(embed=embed, view=HelpButtons())
-
-
-def setup(client):
+        await interaction.send(embed=embed, view=BotInfoLinkButton())
+    
+def setup(client: commands.Bot):
     client.add_cog(Help(client))
